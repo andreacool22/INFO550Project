@@ -1,0 +1,160 @@
+---
+title: "Nursing Home Antibiotic Prescribing Metrics"
+author: "Andrea Cool"
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+output: 
+  html_document:
+    highlights: "breezedark"
+---
+<!--
+	Suppress all code chunks
+-->
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(table1)
+
+options(stringsAsFactors = FALSE)
+```
+
+<!--
+Import and clean data
+-->
+```{r, load-data}
+Project_Data_Raw <- read.csv(file = 'EASIL_dummydata.csv')
+Project_Data <- Project_Data_Raw %>%
+filter(!is.na(new_start)) %>%
+ mutate(start_dt = ymd(startdate),
+ 		 study_int = interval(start = ymd("2019/1/1"), end = ymd("2020/4/30")),
+         treat_site = factor(treat_site, levels = c(1:11), 
+                             labels = c("BJI", "BSI", "ENT", "GI",
+                                        "LRI", "SSI", "SST", "UTI",
+                                        "UND", "Unknown", "Other")),
+         treat_site_cat = ifelse(treat_site == "UTI", treat_site,
+                                 ifelse(treat_site == "LRI", treat_site, 
+                                        ifelse(treat_site == "SST", treat_site, 11))),
+         treat_site_binary = ifelse(treat_site == "UTI",treat_site, 11),
+         treat_site_binary = factor(treat_site_binary, levels = c(8,11), labels = c("UTI", "Other")),
+         uti = ifelse(treat_site == "UTI", 1, 0),
+         sbar = factor(sbar, levels = c(0:3), 
+                       labels = c("No", "Yes", "Not Applicable",
+                                  "Unknown")),
+         criteria_met = factor(criteria_met, levels = c(0:3), 
+                               labels = c("No", "Yes", "Not Applicable",
+                                          "Unknown")),
+         fac_name = factor(fac_name, levels = c(1:5), 
+                           labels = c("Nursing Home A", 
+                                      "Nursing Home B",
+                                      "Nursing Home C", 
+                                      "Nursing Home D", 
+                                      "Other")),
+         indicatn = factor(indicatn, levels = c(1:6), 
+                               labels = c("Active Infection (Imperic)", 
+                                          "Active Infection (modification based on test result)", 
+                                          "Prophylaxis",
+                                          "Non Infectious",
+                                          "Not Documented",
+                                          "Other")),
+         # eliminating UTIs with NAs, except for Nursing Home C
+         new_start = ifelse(fac_name == "Nursing Home C", new_start, 
+                            ifelse(treat_site == "UTI", 
+                            ifelse(sbar == "Not Applicable", 0,
+                                   ifelse(sbar == "Unknown", 0, new_start)), new_start)),
+         new_start = factor(new_start, labels = 
+                              c("Transfer Orders", "New Start")),
+         year.int = (year + 2016),
+         month.name = month(month, label = TRUE),
+         month.int = as.integer(month(month, label = TRUE))) %>%
+unite(q.year, year.int, quarter, sep = " Q") %>% 
+mutate(q.year = ifelse(q.year == "NA_4", "2018_4", q.year),
+         q.year = as.factor(q.year),
+         q.year.i = as.integer(q.year),
+         
+         new_start = factor(new_start, labels = 
+                              c("Transfer Orders", "New Start")),
+         
+         year.int = (year + 2016)) %>%
+unite(m.year, year.int, month.int, sep = "_") %>%
+mutate(m.year = ifelse(m.year == "NA_11", "2018_11", m.year), 
+         m.year = as.factor(m.year),
+         m.year = fct_relevel(m.year, 
+                              c("2018_1", "2018_2", "2018_3", "2018_4",  "2018_5",  
+                                "2018_6",  "2018_7",
+                                "2018_8", "2018_9", "2018_10", "2018_11", "2018_12", 
+                                "2019_1", 
+                                "2019_2", "2019_3", "2019_4", 
+                                "2019_5", "2019_6", "2019_7",
+                                "2019_8", "2019_9", "2019_10",
+                                "2019_11", "2019_12", "2020_1", 
+                                "2020_2", "2020_3", "2020_4")),
+          rec.dur.uti = ifelse(abxnm == "CEPHLX", 5,
+                          ifelse(abxnm == "NITRO", 5,
+                                 ifelse(abxnm == "SULFAET", 3,
+                                 ifelse(abxnm == "DOXY", 5,
+                                 ifelse(abxnm == "AMOXWC", 5,
+                                 ifelse(abxnm == "CIPRO", 3,
+                                 ifelse(abxnm == "LEVO", 3,
+                                 ifelse(abxnm == "AMOX", 5,
+                                 ifelse(abxnm == "CEFUR", 5, NA ))))))))),
+         ov_rec = ifelse(days_of_therapy > rec.dur.uti, 1, 0),
+         un_rec = ifelse(days_of_therapy <= rec.dur.uti, 1, 0)) %>%
+filter(start_dt %within% study_int)
+ ```
+
+## Analysis
+The following table provides the frequencies of treatment site category and rationale for antibiotic starts as well as the median days of therapy for antibiotic starts, by facility and start status. 
+
+<!--
+  Create a table for facility characteristics.
+-->
+```{r, make-table}
+label(Project_Data$treat_site) <- "Treatment Site"
+label(Project_Data$new_start) <- "Start Status"
+label(Project_Data$days_of_therapy) <- "Days of Therapy"
+label(Project_Data$fac_name) <- "Facility Name"
+label(Project_Data$indicatn) <- "Rationale"
+
+my.render.cat <- function(x) {
+  c("", sapply(stats.default(x), 
+               function(y) with(y, sprintf("%d (%0.1f %%)", FREQ, PCT))))}
+table1(~ treat_site + indicatn + days_of_therapy | fac_name + new_start, data = Project_Data,
+         render.continuous = c(.="Median (Q1, Q3)"),
+         render.categorical=my.render.cat)
+```
+
+
+We compared numbers of new antibiotic starts for UTIs versus all other new antibiotic starts for each quarter of the intervention. A bar graph is shown below. 
+
+
+<!--
+	Create a bar graph comparing counts of UTI starts versus all other starts for each month of the intervention.
+-->
+
+```{r, filter-dataset}
+#Create a new dataset that filters just for new starts and UTI starts and groups by quarter
+Treat_Site_Year <- Project_Data %>%
+    filter(new_start == "New Start") %>% 
+    group_by(q.year, treat_site_binary) %>% 
+    tally()
+
+f1 <- ggplot(Treat_Site_Year, aes(x = q.year, y = n, fill = treat_site_binary)) + 
+    theme_bw() +
+    scale_fill_grey(name = "") +
+    theme(legend.position = "right") +
+    geom_bar(stat = "identity", position = position_dodge()) +
+    coord_cartesian(ylim = c(0, max(Treat_Site_Year$n))) +
+    labs(x = "Quarter", y = "Number of New Starts", title = "New Antibiotic Starts Each Quarter, by Treatment Site")
+f1
+```
+
+```{r, compute-uti}
+Treat_Site_UTI <- Project_Data %>%
+    filter(new_start == "New Start", treat_site_binary == "UTI") %>% 
+    group_by(q.year) %>% 
+    tally()
+```
+
+On average, the nursing homes included in the intervention had `r mean(Treat_Site_UTI$n)` new antibiotic starts for UTIs per quarter.
+
