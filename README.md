@@ -16,4 +16,4 @@ To execute the analysis, from the project folder you can run the following bash 
 Rscript -e "rmarkdown::render('Cool_Project.Rmd')"
 ```   
 
-This will create a file called Cool_Project.html output in your directory that contains the results.
+This will create a file called Cool_Project.html output in your directory that contains the results of the analysis.
