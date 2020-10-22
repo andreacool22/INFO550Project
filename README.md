@@ -13,7 +13,7 @@ install.packages("table1")
 To execute the analysis, from the project folder you can run the following bash code:
 
 ``` bash       
-Rscript -e "rmarkdown::render('Cool_Project.Rmd')"
+Rscript -e "rmarkdown::render('Cool_Project_Report.Rmd')"
 ```   
 
-This will create a file called Cool_Project.html output in your directory that contains the results of the analysis.
+This will create a file called Cool_Project_Report.html output in your directory that contains the results of the analysis.
