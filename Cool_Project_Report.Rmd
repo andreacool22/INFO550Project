@@ -101,6 +101,18 @@ mutate(m.year = ifelse(m.year == "NA_11", "2018_11", m.year),
          ov_rec = ifelse(days_of_therapy > rec.dur.uti, 1, 0),
          un_rec = ifelse(days_of_therapy <= rec.dur.uti, 1, 0)) %>%
 filter(start_dt %within% study_int)
+
+label(Project_Data$treat_site) <- "Treatment Site"
+label(Project_Data$new_start) <- "Start Status"
+label(Project_Data$days_of_therapy) <- "Days of Therapy"
+label(Project_Data$fac_name) <- "Facility Name"
+label(Project_Data$indicatn) <- "Rationale"
+
+#Create a new dataset that filters just for new starts and UTI starts and groups by quarter
+Treat_Site_Year <- Project_Data %>%
+    filter(new_start == "New Start") %>% 
+    group_by(q.year, treat_site_binary) %>% 
+    tally()
  ```
 
 ## Analysis
@@ -110,12 +122,6 @@ The following table provides the frequencies of treatment site category and rati
   Create a table for facility characteristics.
 -->
 ```{r, make-table}
-label(Project_Data$treat_site) <- "Treatment Site"
-label(Project_Data$new_start) <- "Start Status"
-label(Project_Data$days_of_therapy) <- "Days of Therapy"
-label(Project_Data$fac_name) <- "Facility Name"
-label(Project_Data$indicatn) <- "Rationale"
-
 my.render.cat <- function(x) {
   c("", sapply(stats.default(x), 
                function(y) with(y, sprintf("%d (%0.1f %%)", FREQ, PCT))))}
@@ -132,13 +138,7 @@ We compared numbers of new antibiotic starts for UTIs versus all other new antib
 	Create a bar graph comparing counts of UTI starts versus all other starts for each month of the intervention.
 -->
 
-```{r, filter-dataset}
-#Create a new dataset that filters just for new starts and UTI starts and groups by quarter
-Treat_Site_Year <- Project_Data %>%
-    filter(new_start == "New Start") %>% 
-    group_by(q.year, treat_site_binary) %>% 
-    tally()
-
+```{r, make-plot}
 f1 <- ggplot(Treat_Site_Year, aes(x = q.year, y = n, fill = treat_site_binary)) + 
     theme_bw() +
     scale_fill_grey(name = "") +
