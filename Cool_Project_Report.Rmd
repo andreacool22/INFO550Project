@@ -23,7 +23,7 @@ options(stringsAsFactors = FALSE)
 Import and clean data
 -->
 ```{r, load-data}
-Project_Data_Raw <- read.csv(file = 'EASIL_dummydata.csv')
+Project_Data_Raw <- read.csv(file = 'Cool_Project_RawData.csv')
 Project_Data <- Project_Data_Raw %>%
 filter(!is.na(new_start)) %>%
  mutate(start_dt = ymd(startdate),
