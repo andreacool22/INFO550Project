@@ -1,9 +1,0 @@
-# rule for making report 
-report: Cool_Project_RawData.txt
-	Rscript -e "rmarkdown::render('Cool_Project_Report.Rmd')"
-
-# rule for fig 1
-
-# rule for cleaning data
-
-# rule for installing packages
