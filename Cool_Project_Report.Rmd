@@ -1,0 +1,61 @@
+---
+title: "Nursing Home Antibiotic Prescribing Metrics"
+author: "Andrea Cool"
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+output: 
+  html_document:
+    highlights: "breezedark"
+---
+<!--
+	Suppress all code chunks
+-->
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(table1)
+options(stringsAsFactors = FALSE)
+```
+
+```{r, read-data, echo = FALSE}
+Cool_Project_Data <- read.csv("Cool_Project_Data.csv", header = TRUE)
+
+ ```
+
+## Analysis
+The following table provides the frequencies of treatment site category and rationale for antibiotic starts as well as the median days of therapy for antibiotic starts, by facility and start status. 
+
+<!--
+  Create a table for facility characteristics.
+-->
+```{r, make-table}
+
+label(Cool_Project_Data$treat_site) <- "Treatment Site"
+label(Cool_Project_Data$new_start) <- "Start Status"
+label(Cool_Project_Data$days_of_therapy) <- "Days of Therapy"
+label(Cool_Project_Data$fac_name) <- "Facility Name"
+label(Cool_Project_Data$indicatn) <- "Rationale"
+
+my.render.cat <- function(x) {
+  c("", sapply(stats.default(x), 
+               function(y) with(y, sprintf("%d (%0.1f %%)", FREQ, PCT))))}
+table1(~ treat_site + indicatn + days_of_therapy | fac_name + new_start, data = Cool_Project_Data,
+         render.continuous = c(.="Median (Q1, Q3)"),
+         render.categorical=my.render.cat)
+```
+
+
+We compared numbers of new antibiotic starts for UTIs versus all other new antibiotic starts for each quarter of the intervention. A bar graph is shown below. 
+
+![Figure 1](fig1.png)
+
+```{r, compute-uti}
+Treat_Site_UTI <- Cool_Project_Data %>%
+    filter(new_start == "New Start", treat_site_binary == "UTI") %>% 
+    group_by(q.year) %>% 
+    tally()
+```
+
+On average, the nursing homes included in the intervention had `r mean(Treat_Site_UTI$n)` new antibiotic starts for UTIs per quarter.
+
