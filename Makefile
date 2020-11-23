@@ -25,6 +25,7 @@ install: packages.r
 .PHONY: help
 help: Makefile
 	@echo "report : Generate final analysis report"
+	@echo "build: Buld docker image"
 	@echo "Cool_Project_Data.txt : Clean Cool_Project_Rawdata"
 	@echo "fig1.png : Make a bar graph"
 	@echo "install : Install necessary R packages"
