@@ -2,6 +2,10 @@
 report: Cool_Project_Data.csv fig1.png Cool_Project_Report.Rmd
 	Rscript -e "rmarkdown::render('Cool_Project_Report.Rmd')"
 
+#rule for build docker image
+build: Dockerfile
+	docker build -t info550 .
+
 # rule for fig 1
 fig1.png: make_fig1.R Cool_Project_Data.csv
 	chmod +x make_fig1.R && \
