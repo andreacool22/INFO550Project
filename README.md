@@ -24,7 +24,7 @@ make install
 ## Execute in Docker
 To execute this analysis in Docker, first use the following command to pull the docker image:
 ``` bash       
-docker pull andreacool22/info550 .
+docker pull andreacool22/info550
 ```   
 
 Next, to generate the final report, you will need to run the following command to mount your local directory to the directory in the container:
