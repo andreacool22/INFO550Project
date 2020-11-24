@@ -7,7 +7,7 @@ library(lubridate)
 library(table1)
 
 # read data
-Cool_Project_RawData <- read.csv(file = 'Cool_Project_RawData.csv')
+Cool_Project_RawData <- read.csv(file = 'data/Cool_Project_RawData.csv')
 
 # clean data
 Cool_Project_Data <- Cool_Project_RawData %>%
@@ -89,4 +89,4 @@ mutate(m.year = ifelse(m.year == "NA_11", "2018_11", m.year),
 filter(start_dt %within% study_int)
 
 # save data
-write.csv(Cool_Project_Data, "Cool_Project_Data.csv", quote=FALSE, row.names=FALSE)
+write.csv(Cool_Project_Data, "data/Cool_Project_Data.csv", quote=FALSE, row.names=FALSE)
