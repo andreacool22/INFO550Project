@@ -1,4 +1,5 @@
 # rule for making report 
+.PHONY: report
 report: Cool_Project_Data.csv fig1.png Cool_Project_Report.Rmd
 	Rscript -e "rmarkdown::render('Cool_Project_Report.Rmd')"
 
