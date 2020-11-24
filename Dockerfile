@@ -9,7 +9,7 @@ RUN Rscript -e "install.packages('table1')"
 # make a project directory in the container
 # we will mount our local project directory to this directory
 RUN mkdir /project
-RUN mkdir /project/report
+RUN mkdir /project/output
 
 # copy contents of local folder to project folder in container
 COPY ./ /project/
