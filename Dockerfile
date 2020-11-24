@@ -19,6 +19,5 @@ WORKDIR /project
 # make R scripts executable
 RUN chmod +x /project/*.R
 
-
 # make container entry point bash
 CMD make -C project report
