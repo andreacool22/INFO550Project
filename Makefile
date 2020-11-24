@@ -1,6 +1,6 @@
 # rule for making report 
 report: Cool_Project_Data.csv fig1.png Cool_Project_Report.Rmd
-	Rscript -e "rmarkdown::render('Cool_Project_Report.Rmd', output_file = '../output/Cool_Project_Report.html')"
+	Rscript -e "rmarkdown::render('Cool_Project_Report.Rmd', output_file = './output/Cool_Project_Report.html')"
 
 #rule for build docker image
 build: Dockerfile
