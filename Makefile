@@ -1,25 +1,25 @@
 # rule for making report 
-report: Cool_Project_Data.csv fig1.png Cool_Project_Report.Rmd
-	Rscript -e "rmarkdown::render('Cool_Project_Report.Rmd')"
+report: data/Cool_Project_Data.csv figs/fig1.png R/Cool_Project_Report.Rmd
+	Rscript -e "rmarkdown::render('R/Cool_Project_Report.Rmd', output_file = '../output/Cool_Project_Report.html')"
 
 #rule for build docker image
 build: Dockerfile
 	docker build -t andreacool22/info550 .
 
 # rule for fig 1
-fig1.png: make_fig1.r Cool_Project_Data.csv
-	chmod +x make_fig1.r && \
-	Rscript make_fig1.r
+figs/fig1.png: R/make_fig1.r data/Cool_Project_Data.csv
+	chmod +x R/make_fig1.r && \
+	Rscript R/make_fig1.r
 
 # rule for cleaning data
-Cool_Project_Data.csv: Cool_Project_Cleandata.R Cool_Project_RawData.csv
-	chmod +x Cool_Project_Cleandata.R && \
-	Rscript Cool_Project_Cleandata.R
+data/Cool_Project_Data.csv: R/Cool_Project_Cleandata.R data/Cool_Project_RawData.csv
+	chmod +x R/Cool_Project_Cleandata.R && \
+	Rscript R/Cool_Project_Cleandata.R
 
 # rule for installing packages
-install: packages.r
-	chmod +x packages.r && \
-	Rscript packages.r
+install: R/packages.r
+	chmod +x R/packages.r && \
+	Rscript R/packages.r
 
 # echo helpful information
 .PHONY: help
@@ -32,4 +32,4 @@ help: Makefile
 
 # clean up directory
 clean:
-	rm Cool_Project_Data.csv fig1.png Cool_Project_Report.html
+	rm data/Cool_Project_Data.csv figs/fig1.png output/Cool_Project_Report.html
