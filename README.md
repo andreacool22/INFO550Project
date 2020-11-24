@@ -8,18 +8,6 @@ For my project, I will be analyzing deidentified data on antibiotic starts from 
      - Cool_Project_Report.Rmd : This is the R markdown file for generating the final report
      - Makefile : This is the makefile which contains the rules for installing packages and generating the report
      - Dockerfile: This is the Docker File that will be used to build the docker container
- 
-For this analysis, you will need the following R packages:
-     
-     - dplyr
-     - tidyverse
-     - lubridate
-     - table1
-
-To install these packages to your computer, from the project folder you can run the following bash code:
-``` bash       
-make install
-```   
 
 ## Execute in Docker (Homework 7)
 To execute this analysis in Docker, first use the following command to pull the docker image:
@@ -32,12 +20,23 @@ Next, to generate the final report, you will need to run the following command t
 ``` bash       
 docker run -v /local_path:/project/output andreacool22/info550
 ```   
-NOTE: Be sure to replace "local_path" with the path to your local directory where you want the output to be saved.
+NOTE: Be sure to replace "local_path" with the path to your local directory where you want the output to be saved (e.g., docker run -v /Users/andreacool/Documents:/project/output andreacool22/info550 )
 
-The final output will be included in a folder called "report" that will be added to the local directory that you specified in the previous step.
+This command will generate the final report titled "Cool_Project_Report.html" in the local directory that you specified in the previous step.
 
 ## Execute using Make
 
+For this analysis, you will need the following R packages:
+     
+     - dplyr
+     - tidyverse
+     - lubridate
+     - table1
+
+To install these packages to your computer, from the project folder you can run the following bash code:
+``` bash       
+make install
+```   
 From the project folder you can run the following bash code:
 
 ``` bash       
