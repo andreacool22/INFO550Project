@@ -5,8 +5,8 @@ library(lubridate)
 library(table1)
 
 # read in data
-Cool_Project_Data <- read.csv("Cool_Project_Data.csv", header=TRUE)
-png("fig1.png")
+Cool_Project_Data <- read.csv("data/Cool_Project_Data.csv", header=TRUE)
+png("figs/fig1.png")
 
 #Create a new dataset that filters just for new starts and UTI starts and groups by quarter
 Treat_Site_Year <- Cool_Project_Data %>%
