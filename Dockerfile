@@ -1,10 +1,10 @@
 FROM rocker/tidyverse
 
 # install R packages
-RUN Rscript -e "install.packages('dplyr', repos='http://cran.us.r-project.org')"
-RUN Rscript -e "install.packages('tidyverse', repos='http://cran.us.r-project.org')"
-RUN Rscript -e "install.packages('lubridate', repos='http://cran.us.r-project.org')"
-RUN Rscript -e "install.packages('table1', repos='http://cran.us.r-project.org')"
+RUN Rscript -e "install.packages('dplyr')"
+RUN Rscript -e "install.packages('tidyverse')"
+RUN Rscript -e "install.packages('lubridate')"
+RUN Rscript -e "install.packages('table1')"
 
 # make a project directory in the container
 # we will mount our local project directory to this directory
