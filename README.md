@@ -21,7 +21,7 @@ To install these packages to your computer, from the project folder you can run 
 make install
 ```   
 
-## Execute in Docker
+## Execute in Docker (Homework 7)
 To execute this analysis in Docker, first use the following command to pull the docker image:
 ``` bash       
 docker pull andreacool22/info550
