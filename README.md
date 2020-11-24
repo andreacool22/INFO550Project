@@ -26,7 +26,9 @@ This command will generate the final report titled "Cool_Project_Report.html" in
 
 ## Execute using Make
 
-For this analysis, you will need the following R packages:
+First, you will need to fork and clone this repository into a local directory. 
+
+Next, for this analysis, you will need the following R packages:
      
      - dplyr
      - tidyverse
@@ -37,7 +39,7 @@ To install these packages to your computer, from the project folder you can run 
 ``` bash       
 make install
 ```   
-From the project folder you can run the following bash code:
+To generate the report, from the project folder you can run the following bash code:
 
 ``` bash       
 make report
