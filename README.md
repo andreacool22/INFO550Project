@@ -30,7 +30,7 @@ docker pull andreacool22/info550
 Next, to generate the final report, you will need to run the following command to mount your local directory to the directory in the container:
 
 ``` bash       
-docker run -v /local_path/report:/project/report andreacool22/info550
+docker run -v /local_path:/project/output andreacool22/info550
 ```   
 NOTE: Be sure to replace "local_path" with the path to your local directory where you want the output to be saved.
 
