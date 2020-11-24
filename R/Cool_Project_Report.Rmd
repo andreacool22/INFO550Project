@@ -19,7 +19,7 @@ options(stringsAsFactors = FALSE)
 ```
 
 ```{r, read-data, echo = FALSE}
-Cool_Project_Data <- read.csv("data/Cool_Project_Data.csv", header = TRUE)
+Cool_Project_Data <- read.csv("../data/Cool_Project_Data.csv", header = TRUE)
 
  ```
 
@@ -48,7 +48,7 @@ table1(~ treat_site + indicatn + days_of_therapy | fac_name + new_start, data = 
 
 We compared numbers of new antibiotic starts for UTIs versus all other new antibiotic starts for each quarter of the intervention. A bar graph is shown below. 
 
-![Figure 1](figs/fig1.png)
+![Figure 1](../figs/fig1.png)
 
 ```{r, compute-uti}
 Treat_Site_UTI <- Cool_Project_Data %>%
